@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GPI Top 10 Leaderboard</title>
+  <style>
+    body { font-family: "Noto Sans TC", sans-serif; background: #f4f4f4; padding: 20px; color: #333; }
+    h2 { text-align: center; color: #9a1e1e; }
+    table { width: 100%; max-width: 600px; margin: auto; border-collapse: collapse; background: #fff; }
+    th { background-color: #9a1e1e; color: white; padding: 10px; }
+    td { text-align: center; padding: 8px; border-bottom: 1px solid #ddd; }
+    tr:nth-child(even) { background-color: #f9f9f9; }
+  </style>
+</head>
+<body>
+  <h2>GPI Master 排行榜 前 10 名</h2>
+  <table>
+    <thead>
+      <tr><th>名次</th><th>選手姓名</th><th>國家</th><th>積分</th></tr>
+    </thead>
+    <tbody id="leaderboard"></tbody>
+  </table>
+
+  <script>
+    async function loadLeaderboard() {
+      const res = await fetch('top10.json');
+      const data = await res.json();
+      const tbody = document.getElementById('leaderboard');
+      tbody.innerHTML = '';
+      data.forEach((p, i) => {
+        tbody.innerHTML += `<tr><td>${i+1}</td><td>${p.name}</td><td>${p.country}</td><td>${p.score}</td></tr>`;
+      });
+    }
+    loadLeaderboard();
+  </script>
+</body>
+</html>
