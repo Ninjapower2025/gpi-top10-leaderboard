@@ -28,7 +28,7 @@ def scrape_top30():
             except:
                 continue
 
-        # 找到repo根目錄
+        # 存到repo根目錄
         current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         output_file = os.path.join(current_dir, 'top30.json')
 
