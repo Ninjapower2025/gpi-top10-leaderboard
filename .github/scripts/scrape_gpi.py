@@ -1,18 +1,13 @@
-
 from playwright.sync_api import sync_playwright
 import json
-import time
 
 def scrape_top30():
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
         page.goto("https://gpimaster.com/#/rank", timeout=60000)
-
-        # 等待資料載入
         page.wait_for_timeout(5000)
 
-        # 擷取前30名資料
         data = []
         for i in range(1, 31):
             try:
@@ -32,6 +27,7 @@ def scrape_top30():
             except:
                 continue
 
+        # ✅ 這裡固定存成 top30.json
         with open("top30.json", "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
 
