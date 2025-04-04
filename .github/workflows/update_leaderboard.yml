@@ -1,14 +1,14 @@
-
 name: Update GPI Leaderboard
 
 on:
   schedule:
-    - cron: '0 19 * * *'  # 每天 UTC 19:00，相當於台灣時間凌晨 3 點
-  workflow_dispatch:
+    - cron: '0 19 * * *'  # 每天 UTC 19:00，相當於台灣凌晨 3點
+  workflow_dispatch:  # 支援手動觸發
 
 jobs:
   update-leaderboard:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -23,13 +23,13 @@ jobs:
           pip install playwright
           playwright install chromium
 
-      - name: Run scraper
+      - name: Run scraper script
         run: python .github/scripts/scrape_gpi.py
 
-      - name: Commit and push
+      - name: Commit and push changes
         run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
+          git config user.name github-actions
+          git config user.email github-actions@github.com
           git add top30.json
-          git commit -m "Auto update top30.json [CI]" || echo "No changes to commit"
+          git commit -m "Auto update top30.json" || echo "No changes"
           git push
