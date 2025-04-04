@@ -54,7 +54,7 @@
 
   <script>
     async function loadLeaderboard() {
-      const res = await fetch('top30_final.json');
+      const res = await fetch('top30.json');
       const data = await res.json();
       const tbody = document.getElementById('leaderboard');
       tbody.innerHTML = '';
