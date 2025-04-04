@@ -7,14 +7,16 @@ def scrape_top30():
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
         page.goto("https://gpimaster.com/#/rank", timeout=60000)
-        page.wait_for_timeout(5000)
+
+        # 等待表格載入（這邊改成更穩定的等待方式）
+        page.wait_for_selector('table tr:nth-child(1) td:nth-child(2)', timeout=15000)
 
         data = []
         for i in range(1, 31):
             try:
-                name_selector = f'tr:nth-child({i}) td:nth-child(2)'
-                country_selector = f'tr:nth-child({i}) td:nth-child(3)'
-                score_selector = f'tr:nth-child({i}) td:nth-child(4)'
+                name_selector = f'table tr:nth-child({i}) td:nth-child(2)'
+                country_selector = f'table tr:nth-child({i}) td:nth-child(3)'
+                score_selector = f'table tr:nth-child({i}) td:nth-child(5)'  # 注意 GPI分數是第5個td
 
                 name = page.locator(name_selector).inner_text()
                 country = page.locator(country_selector).inner_text()
@@ -25,9 +27,11 @@ def scrape_top30():
                     "country": country.strip(),
                     "score": round(score, 2)
                 })
-            except:
+            except Exception as e:
+                print(f"Error at row {i}: {e}")
                 continue
 
+        # 把資料寫入 top30.json
         current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         output_file = os.path.join(current_dir, 'top30.json')
 
