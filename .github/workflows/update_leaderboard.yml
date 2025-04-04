@@ -1,8 +1,8 @@
-name: Update GPI Leaderboard
+name: Update GPI Top 30 via OCR
 
 on:
   schedule:
-    - cron: '0 19 * * *'
+    - cron: '0 19 * * *' # 台灣時間 3AM = UTC 7PM
   workflow_dispatch:
 
 jobs:
@@ -13,23 +13,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
 
       - name: Install dependencies
         run: |
-          pip install playwright
+          pip install playwright easyocr Pillow
           playwright install chromium
 
-      - name: Run scraper script
-        run: python .github/scripts/scrape_gpi.py
+      - name: Run OCR Scraper
+        run: python .github/scripts/scrape_gpi_ocr.py
 
-      - name: Commit and push changes
+      - name: Commit and Push
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git add top30.json
-          git commit -m "Auto update top30.json" || echo "No changes"
+          git add top30_final.json
+          git commit -m "Auto update top30_final.json by OCR" || echo "No changes"
           git push
